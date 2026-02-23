@@ -22,11 +22,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   padding: 20px;
+  color: white;
 }
 
-/* Glow azul */
+/* Glow azul elegante */
 body::before {
   content: "";
   position: absolute;
@@ -47,7 +47,7 @@ body::before {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 580px;
+  max-width: 600px;
   padding: 50px 45px;
   border-radius: 28px;
   background: rgba(18, 32, 60, 0.55);
@@ -57,24 +57,22 @@ body::before {
   animation: fadeUp 0.8s ease forwards;
 }
 
-/* Header */
 .header {
   text-align: center;
   margin-bottom: 30px;
 }
 
 .header img {
-  width: 70px;
+  width: 75px;
   margin-bottom: 15px;
 }
 
 .header h1 {
-  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  font-size: clamp(1.6rem, 2vw, 2rem);
   letter-spacing: 3px;
   font-weight: 700;
 }
 
-/* Descripción */
 .description {
   text-align: center;
   font-size: 0.9rem;
@@ -83,13 +81,14 @@ body::before {
   margin-bottom: 35px;
 }
 
-/* Form */
+/* Labels */
 label {
   font-size: 0.85rem;
   font-weight: 500;
 }
 
-input, select, textarea {
+/* Inputs base */
+input, textarea, select {
   width: 100%;
   padding: 16px;
   border-radius: 16px;
@@ -109,18 +108,17 @@ textarea::placeholder {
 }
 
 input:focus,
-select:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 4px rgba(59,130,246,0.3);
   background: rgba(255,255,255,0.1);
 }
 
-/* Error visual */
-input:invalid,
-select:invalid,
-textarea:invalid {
-  border-color: #ef4444;
+/* Forzar dropdown oscuro */
+select option {
+  background-color: #0f1c2e;
+  color: white;
 }
 
 /* Textarea */
@@ -154,6 +152,7 @@ button.loading {
   cursor: not-allowed;
 }
 
+/* Mensajes */
 .message {
   margin-top: 15px;
   text-align: center;
@@ -163,7 +162,7 @@ button.loading {
 .success { color: #4ade80; }
 .error { color: #f87171; }
 
-/* Responsive real */
+/* Responsive */
 @media (max-width: 768px) {
   .card {
     padding: 35px 25px;
@@ -214,6 +213,8 @@ button.loading {
 
 <script>
 
+const API_URL = "https://personal-n8n.yaf3an.easypanel.host/webhook/solicitudes";
+
 const form = document.getElementById("solicitudForm");
 const mensaje = document.getElementById("mensaje");
 const button = document.getElementById("submitBtn");
@@ -237,9 +238,11 @@ form.addEventListener("submit", async (e) => {
   };
 
   try {
-    const response = await fetch("https://personal-n8n.yaf3an.easypanel.host/webhook/solicitudes", {
+    const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(datos)
     });
 
