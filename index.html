@@ -249,7 +249,7 @@ form.addEventListener("submit", async (e) => {
     const resultado = await response.json();
 
     if (resultado.status === "ok") {
-      mensaje.textContent = "✔️ Solicitud enviada correctamente.";
+      window.location.href = "/success.html";
       mensaje.className = "message success";
       form.reset();
     } else {
