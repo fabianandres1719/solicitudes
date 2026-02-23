@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitudes MCI Madrid</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(circle at top, #0b1a35, #030c1d);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.card {
+  width: 95%;
+  max-width: 500px;
+  background: rgba(18,32,60,0.6);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  padding: 45px 40px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  color: white;
+  animation: fadeUp 0.9s ease forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+label {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.35);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 600;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(37,99,235,0.4);
+}
+
+.message {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.success { color: #4ade80; }
+.error { color: #f87171; }
+
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<h1>SOLICITUD</h1>
+<p>
+✔️ Aquí puedes dejar tus solicitudes y consultas.<br>
+⌛ Se revisarán el lunes siguiente a su envío.
+</p>
+
+<form id="solicitudForm">
+
+<label>Usuario *</label>
+<input type="number" name="usuario" required placeholder="Escriba su número de usuario">
+
+<label>Selecciona sobre qué es tu solicitud *</label>
+<select name="tipo" required>
+  <option value="">Seleccione una opción</option>
+  <option>Transferencia de Discípulos</option>
+  <option>Celugrama</option>
+  <option>Edición</option>
+  <option>Borrar Discipulos</option>
+  <option>Otro</option>
+</select>
+
+<label>Solicitud *</label>
+<textarea name="solicitud" required placeholder="Describe detalladamente tu solicitud..."></textarea>
+
+<button type="submit">ENVIAR SOLICITUD</button>
+
+<div id="mensaje" class="message"></div>
+
+</form>
+
+</div>
+
+<script>
+
+const form = document.getElementById("solicitudForm");
+const mensaje = document.getElementById("mensaje");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  mensaje.textContent = "Enviando...";
+  mensaje.className = "message";
+
+  const datos = {
+    usuario: form.usuario.value,
+    tipo: form.tipo.value,
+    solicitud: form.solicitud.value
+  };
+
+  try {
+    const response = await fetch("https://personal-n8n.yaf3an.easypanel.host/webhook/solicitudes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.status === "ok") {
+      mensaje.textContent = "✔️ Solicitud enviada correctamente.";
+      mensaje.classList.add("success");
+      form.reset();
+    } else {
+      mensaje.textContent = "❌ Hubo un problema.";
+      mensaje.classList.add("error");
+    }
+
+  } catch (error) {
+    mensaje.textContent = "❌ Error de conexión con el servidor.";
+    mensaje.classList.add("error");
+  }
+
+});
+
+</script>
+
+</body>
+</html>
